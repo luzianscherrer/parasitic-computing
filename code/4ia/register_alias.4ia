@@ -1,0 +1,18 @@
+;
+; $Id: register_alias.4ia,v 1.2 2002/11/15 11:17:58 ls Exp $
+;
+; Register Alias:
+; Das Register r0 kann auch als ip, das Register r1 als fl angesprochen
+; werden. Nach Ausfuehrung des Programmes enthaelt r4 den Wert 2 und r5 den
+; Wert 1.
+;
+;.............................................................................
+
+ARCH 8 10          ; Architekturdefinition (8 Bits, 10 Register)
+
+00:  SET r2, 7     ; Konstante 7 nach r2 laden
+01:  SET r3, 255   ; Konstante 255 nach r3 laden
+02:  MOV r4, ip    ; r0 (ip) nach r4 kopieren
+03:  ADD r2, r3    ; Additionsueberlauf produzieren
+04:  MOV r5, fl    ; r1 (fl) nach r5 kopieren
+05:  HLT

@@ -1,0 +1,79 @@
+<project name="Xto4" default="package" basedir=".">
+
+  <property name="src" value="src"/>
+  <property name="build" value="build"/>
+  <property name="API" value="API"/>
+
+  <target name="compile">
+    <mkdir dir="${build}"/>
+    <javac srcdir="${src}" destdir="${build}"/>
+  </target>
+
+  <target name="package" depends="compile">
+    <jar jarfile="${basedir}/Xto4.jar"
+         basedir="${build}" manifest="manifest"/>
+  </target>
+
+  <target name="clean">
+    <delete file="Xto4.jar"/>
+    <delete dir="${build}"/>
+    <delete dir="${API}"/>
+  </target>
+
+  <target name="javadoc">
+    <mkdir dir="${API}"/>
+    <javadoc packagenames="org.parasit.*"
+           sourcepath="src"
+           defaultexcludes="yes"
+           destdir="${API}"
+           author="true"
+           version="true"
+           use="true"
+           access="private"
+           windowtitle="Parasitic computing
+                        Xto4 cross compiler API
+                        $Revision: 1.5 $">
+      <doctitle><![CDATA[
+        <font size="6">P</font>
+        <font size="5"> A R A S I T I C</font>
+        &nbsp;&nbsp;
+        <font size="6">C</font>
+        <font size="5"> O M P U T I N G<br></font>
+        <font size="4">Xto4 cross compiler API</font><br>
+        <font size="1">For further informations about
+                       parasitic computing please visit
+                       <a href="http://www.parasit.org" target="_top">
+                         http://www.parasit.org</a>
+        </font>
+      ]]></doctitle>
+      <bottom><![CDATA[<i>Copyright &#169; 2002 Luzian Scherrer,
+                          Juerg Reusser. All Rights Reserved.<br>
+                          $Id: build.xml,v 1.5 2002/11/24 16:15:46 jr Exp $<br>
+                          For further informations about
+                          parasitic computing please visit
+                          <a href="http://www.parasit.org" target="_top">
+                          http://www.parasit.org</a></i> ]]>
+      </bottom>
+      <tag name="todo" scope="all" description="To do:" />
+      <group title="The main Package"
+             packages="org.parasit.xia"/>
+      <group title="Code generator Packages"
+             packages="org.parasit.xia.compiler*"/>
+      <group title="Scanner and parser packages"
+             packages="org.parasit.xia.scanner*"/>
+      <group title="Virtual register resolver Packages"
+             packages="org.parasit.xia.resolver*"/>
+      <group title="Code optimizing Packages"
+             packages="org.parasit.xia.optimizer*"/>
+      <group title="Packages containing globally used classes"
+             packages="org.parasit.xia.global*"/>
+      <link offline="true"
+             href="http://java.sun.com/products/jdk/1.3/docs/api/"
+             packagelistLoc="C:\tmp"/>
+      <link  href="http://developer.java.sun.com/developer/products/xml/docs/api/"/>
+    </javadoc>
+  </target>
+
+</project>
+
+

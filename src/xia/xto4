@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# $Id: xto4,v 1.2 2002/12/28 18:48:01 ls Exp $
+#
+# Wrapper script to execut the Xto4 cross-compiler from the JAR archive.
+#
+#..........................................................................
+
+
+java -jar `dirname $0`/Xto4.jar $@

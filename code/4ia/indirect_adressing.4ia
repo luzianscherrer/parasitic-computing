@@ -1,0 +1,26 @@
+;
+; $Id: indirect_adressing.4ia,v 1.2 2002/11/15 11:17:58 ls Exp $
+;
+; Indirekte Adressierung:
+; In einem Loop wird wird eine aufeinanderfolgende Sequenz von 
+; Registern (r10-r14) mittels eines Pointers (*r9) auf einen konstanten
+; Wert (r8) gesetzt.
+;
+;.............................................................................
+
+ARCH 8 15          ; Architekturdefinition (8 Bits, 15 Register)
+
+00:  SET r8, 7     ; Konstante 7 nach r8 laden
+01:  SET r7, 1     ; Konstante 1 nach r7 laden
+02:  SET r9, 10    ; r9 mit 10 initialisieren (Pointer)
+03:  SET r3, 255   ; Integerkonstante fuer -1 Subtraktion
+04:  SET r2, 5     ; Anzahl Durchgaenge: 5
+05:  SET r0, 7     ; An start der Schlaufe springen
+06:  MOV *r9, r8   ; Pointerinhalt *r9 mit Konstante 7 laden
+07:  ADD r9, r7    ; Pointer inkrementieren
+08:  SET r1, 0     ; Flag Loeschen
+09:  ADD r2, r3    ; Zaehler dekrementieren
+10:  ADD r0, r1    ; Falls Ueberlauf in Zeile 9, Sprung zu Zeile 12
+11:  SET r0, 12    ; Schlaufe beenden: Zeile 13
+12:  SET r0, 5     ; Schlaufe wiederholen: Zeile 6
+13:  HLT

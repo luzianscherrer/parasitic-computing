@@ -1,0 +1,129 @@
+;
+; $Id: systemtest.xia,v 1.1 2003/01/06 18:36:59 jr Exp $
+;
+; systemtest.
+;
+; Fuehrt alle Opcodes nacheinander aus und schreibt das zu erwartende
+; Ergebnis 0 in Register r18.
+; Falls Fehler (Zahl ungleich 10 in r18), dann folgende Bedeutung:
+;   1 JMP
+;   2 JG
+;   3 JGE
+;   4 JEQ
+;   5 JLE
+;   6 JL
+;   7 JNE
+;
+;............................................................................
+
+
+ARCH   10
+SET    r15     17                ; r15 den Wert 10 zuweisen
+MOV    r16     r15               ; Wert von r15 in r16 kopieren
+
+SPACE --- Pointer checken ---
+SET    r17     10
+MOV    r18     *r16              ; r18 den Wert *r16=r17=10 zuweisen
+
+SPACE ----------------------------------------
+SPACE -                                      -
+SPACE -   Spaces und Kommentare testen ...   -
+SPACE -                                      -
+SPACE ----------------------------------------
+
+
+SPACE --- mathematix ---
+ADD    r18     10                ; r18+10 = 10+10 = 20
+SUB    r18     2                 ; 20 - 2 = 18
+MUL    r18     3                 ; 18 * 3 = 54
+DIV    r18     6                 ; 54 / 6 = 9
+MOD    r18     8                 ; 9%8 = 1
+
+
+SPACE --- logical operators (bitwise) ---
+AND    r18     0b1111111110      ; 1 AND 1111111110 = 1111111110
+OR     r18     0x3FF             ; --> 1111111111
+XOR    r18     0b1010101010      ; --> 0101010101
+NOT    r18                       ; --> 1010101010
+SHL    r18     1                 ; --> 0101010100
+SHR    r18     5                 ; --> 0000001010 = 10
+
+SPACE --- jumps ---
+JMP    Lcont1                    ; Test undedingter Jump
+SET    r18     1                 ; Error code 1 falls JMP falsch
+HLT                              ; Stop falls Fehler
+
+LABEL  Lcont1
+JG     r18     10      Lerror2
+JG     r18     11      Lerror2
+JG     r18     9       Lcont2
+SET    r18     2                 ; Error code 2 falls JG falsch
+HLT
+
+LABEL  Lcont2
+JGE    r18     11      Lerror3
+JGE    r18     12      Lerror3
+JGE    r18     10      Lcont3
+SET    r18     3                 ; Error code 3 falls JGE falsch
+HLT
+
+LABEL  Lcont3
+JEQ    r18     9       Lerror4
+JEQ    r18     11      Lerror4
+JEQ    r18     10      Lcont4
+SET    r18     4                 ; Error code 4 falls JEQ falsch
+HLT
+
+LABEL  Lcont4
+JLE    r18     8       Lerror5
+JLE    r18     9       Lerror5
+JLE    r18     10      Lcont5
+SET    r18     5                 ; Error code 5 falls JLE falsch
+HLT
+
+LABEL  Lcont5
+JL     r18     9       Lerror6
+JL     r18     10      Lerror6
+JL     r18     11      Lcont6
+SET    r18     6                 ; Error code 6 falls JL falsch
+HLT
+
+LABEL  Lcont6
+JNE    r18     10      Lerror7
+JNE    r18     9       Lcont7
+SET    r18     7                 ; Error code 7 falls JNE falsch
+HLT
+
+
+SPACE  --- Ansprungziel falls alle Tests erfolgreich ---
+LABEL  Lcont7
+SET    r18     0                 ; 0 ist das zu erwartende Resultat
+HLT
+
+LABEL  Lerror1
+SET    r18     1
+HLT
+
+LABEL  Lerror2
+SET    r18     2
+HLT
+
+LABEL  Lerror3
+SET    r18     3
+HLT
+
+LABEL  Lerror4
+SET    r18     4
+HLT
+
+LABEL  Lerror5
+SET    r18     5
+HLT
+
+LABEL  Lerror6
+SET    r18     6
+HLT
+
+LABEL  Lerror7
+SET    r18     7
+HLT

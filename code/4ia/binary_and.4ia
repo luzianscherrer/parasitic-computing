@@ -1,0 +1,68 @@
+;
+; $Id: binary_and.4ia,v 1.2 2002/11/15 14:19:29 ls Exp $
+;
+; Binaeres boolesches AND.
+;
+; Die Ganzzahlen in den Registern r4 und r5 werden bitweise and'ed und das
+; Resultat danach nach r6 kopiert. Dieser Code entspricht in C Notation
+; der Operation:  r6 = r4 & r5  (in diesem Beispiel: 0x8A = 0xAB & 0xDE)
+;
+; Hinweis:
+; Die beiden Bloecke zur Ermittlung des jeweils hoechstwertigen Bits der
+; Operanden zeigen eine moegliche Optimierung des bedingten Sprunges. Durch
+; die Multiplikation des Flag-Registers nach dem Vergleich um 2 (bzw. 
+; Addition mit sich selber) entfallen zwei weitere, ansonsten benoetigte
+; Spruenge zu den konkreten Codebloecken der Auswahl. Siehe auch 
+; Realisierungskonzept Abschnitt 2.2.3.
+;
+;.............................................................................
+
+
+ARCH 8 15               ; Architekturdefinition (8 Bits, 15 Register)
+
+
+00: SET r4, 0b10101011  ; Operand 1
+01: SET r5, 0b11011110  ; Operand 2
+
+02: SET r11, 0x80       ; Konstante fuer Fixaddition (hoechstes Bit auf 1)
+03: SET r12, 1          ; Konstante fuer Fixaddition (tiefstes Bit auf 1)
+04: SET r14, 0xff       ; Konstante fuer Fixaddition (maximale Ganzzahl)
+
+05: MOV r9, r4          ; Operand 1 kopieren
+06: MOV r10, r5         ; Operand 2 kopieren
+
+07: SET r13, 7          ; Schlaufenzaehler (Registerbreite - 1)
+
+08: ADD r6, r6          ; Resultat nach links schieben
+
+09: SET fl, 0          
+10: MOV r7, r9          ; Aktuelles hoechstwertiges Bit von Operand 1 ermitteln
+11: ADD r7, r11
+12: ADD fl, fl          ; Flag mit 2 multiplizieren, optimierter bedingter
+13: ADD ip, fl          ; Sprung
+14: SET r7, 0
+15: ADD ip, r12
+16: MOV r7, r11
+
+17: SET fl, 0
+18: MOV r8, r10         ; Aktuelles hoechstwertiges Bit von Operand 2 ermitteln
+19: ADD r8, r11
+20: ADD fl, fl          ; s. oben
+21: ADD ip, fl
+22: SET r8, 0
+23: ADD ip, r12
+24: MOV r8, r11
+
+25: SET fl, 0
+26: ADD r7, r8          ; Addition der zwei ermittelten hoechstwertigen Bits
+27: ADD r6, fl          ; Flag enthaelt Resultat "AND" der obigen zwei Bits
+
+28: ADD r9, r9          ; Operand 1 nach links schieben
+29: ADD r10, r10        ; Operand 2 nach links schieben
+
+30: SET fl, 0           ; Flag loeschen
+31: ADD r13, r14        ; Schlaufenzaehler dekrementieren
+32: ADD ip, fl          ; Bei Ueberlauf Schlaufe wiederholen:
+33: SET ip, 34          ; Srung ans Ende (Zeile 35)
+34: SET ip, 7           ; Sprung zu Zeile 8
+35: HLT

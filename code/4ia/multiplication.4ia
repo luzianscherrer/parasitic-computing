@@ -1,0 +1,21 @@
+;
+; $Id: multiplication.4ia,v 1.3 2002/12/16 08:27:21 ls Exp $
+;
+; Multiplikationsbeispiel mit Schlaufe: 5 * 3, Resultat in r9
+; siehe Realisierungskonzept, Abschnitt 2.2.4
+;
+;.............................................................................
+
+ARCH 8 10          ; Architekturdefinition (5 Bits, 10 Register)
+
+00:  SET r8, 3     ; r8 mit 3 initialisieren
+01:  SET r3, 0xff  ; Integerkonstante fuer -1 Subtraktion
+02:  SET r2, 5     ; Anzahl Durchgaenge: 5
+03:  SET ip, 4     ; An start der Schlaufe springen
+04:  ADD r9, r8    ; Addition
+05:  SET fl, 0     ; Flag Loeschen
+06:  ADD r2, r3    ; Zaehler dekrementieren
+07:  ADD ip, fl    ; Falls Ueberlauf in Zeile 6, Sprung zu Zeile 9
+08:  SET ip, 9     ; Schlaufe beenden: Zeile 8
+09:  SET ip, 3     ; Schlaufe wiederholen: Zeile 4
+10:  HLT

@@ -1,0 +1,21 @@
+;
+; $Id: subtraction.4ia,v 1.2 2002/11/15 11:17:58 ls Exp $
+;
+; Subtraktionsbeispiel mit Schlaufe: 213 - 100, Resultat in r9
+; siehe Realisierungskonzept, Abschnitt 2.2.4
+;
+;.............................................................................
+
+ARCH 8 20          ; Architekturdefinition (8 Bits, 20 Register)
+
+00:  SET r9, 213   ; r9 mit 213 initialisieren
+01:  SET r3, 255   ; Integerkonstante fuer -1 Subtraktion
+02:  SET r2, 100   ; Anzahl Durchgaenge: 100
+03:  SET r0, 4     ; An start der Schlaufe springen
+04:  ADD r9, r3    ; Addition
+05:  SET r1, 0     ; Flag Loeschen
+06:  ADD r2, r3    ; Zaehler dekrementieren
+07:  ADD r0, r1    ; Falls Ueberlauf in Zeile 6, Sprung zu Zeile 9
+08:  SET r0, 9     ; Schlaufe beenden: Zeile 8
+09:  SET r0, 3     ; Schlaufe wiederholen: Zeile 4
+10:  HLT

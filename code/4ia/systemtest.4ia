@@ -1,0 +1,832 @@
+; This 4ia code has been compiled by Xto4 cross compiler, Version 1.07
+; Copyright (c) 2002 Luzian Scherrer, Juerg Reusser
+; Check out http://www.parasit.org for further informations.
+;
+; VM settings to run the following code:
+;   Lowest useable register : r15
+;   Really used registers   : 5
+;     lowest  register used : r15
+;     highest register used : r18
+;   Register width in bits  : 10
+;   Addressable registers   : 1024
+;   decrementing constant   : 1023
+;   Opcodes used 4ia wide   : SET, MOV, ADD, HLT
+;
+; NOTE: Statistics considers only directly addressed registers.
+
+; Initialization parameters for the virtual machine
+ARCH 10 19
+
+0000: SET r2,   0          ; Error code = 0 setzen zu Beginn des Programmes.
+0001: MOV r10,  r15        ; Wert von r15 in tmp. Register r10 kopieren
+0002: SET r10,  17        
+0003: MOV r15,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r15
+0004: MOV r16,  r15        ; Reg. Wert r15 in Reg. r16 kopieren
+                           ; --- Pointer checken --- 
+0005: MOV r10,  r17        ; Wert von r17 in tmp. Register r10 kopieren
+0006: SET r10,  10        
+0007: MOV r17,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r17
+0008: MOV r18,  *r16       ; Reg. Wert *r16 in Reg. r18 kopieren
+                           ; ---------------------------------------- 
+                           ; - - 
+                           ; - Spaces und Kommentare testen ... - 
+                           ; - - 
+                           ; ---------------------------------------- 
+                           ; --- mathematix --- 
+0009: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0010: SET r11,  10         ; Konstante in temp. Reg. r11 laden
+0011: ADD r10,  r11        ; Addition
+0012: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0013: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0014: SET r11,  2          ; Konstante in temp. Reg. r11 laden
+0015: SET r4,   1023       ; Integerkonstante fuer -1 Subtraktion
+0016: SET ip,   17         ; Erste Subtraktion ueberspringen
+0017: ADD r10,  r4         ; Register r10 dekrementieren
+0018: SET fl,   0          ; Flag zuruecksetzen auf 0
+0019: ADD r11,  r4         ; Zaehler r11 dekrementieren
+0020: ADD ip,   fl         ; Schlaufe verlassen falls Zaehler r11 auf 0
+0021: SET ip,   22        
+0022: SET ip,   16        
+0023: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0024: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0025: SET r11,  3          ; Konstante in temp. Reg. r11 laden
+                           ; Beginn der Multiplikation
+0026: SET r5,   0          ; Resultat Register initialisieren
+0027: SET r4,   1023       ; Integerkonstante fuer -1 Subtraktion
+0028: SET ip,   29         ;   Addition wiederholen
+0029: ADD r5,   r10        ; Addition
+0030: SET fl,   0          ; Flag zuruecksetzen auf 0
+0031: ADD r11,  r4         ; Zaehler dekrementieren, Flag setzen falls Unterlauf
+0032: ADD ip,   fl         ; Schlaufe verlassen falls Flag gesetzt
+0033: SET ip,   34         ;   Schlaufe verlassen
+0034: SET ip,   28         ;   Addition wiederholen
+0035: MOV r18,  r5         ; Wert von temp. Reg. r5 zurueck kopieren in r18
+0036: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0037: SET r11,  6          ; Konstante in temp. Reg. r11 laden
+                           ; 
+                           ; check ob Division mit 0
+0038: MOV r5,   r11        ; Register, welches auf 0 getestet werden soll
+0039: SET r4,   40         ; Aktuelle Zeilennummer in r4 fuer Ruecksprung von zero-check
+0040: SET ip,   777        ; Unbedingter Sprung zu Zeile 777 
+0041: SET r4,   1023       ; Subtraktionskonstante -1
+0042: SET r5,   1          ; Additionskonstante 1
+0043: SET r7,   0          ; Resultat Register mit 0 initialisieren
+0044: MOV r6,   r11        ; Innerer Schlaufenzaehler initialisieren (r6)
+0045: SET ip,   49         ; Unbedingter Sprung zu Zeile 49      
+0046: SET fl,   0          ; Flag loeschen
+0047: ADD r10,  r4         ; Dekrement Dividend
+0048: ADD ip,   fl         ; Bei Dividend > 0 weiter
+0049: SET ip,   56         ; Bei Dividend == 0 ende
+0050: SET fl,   0          ; Flag loeschen
+0051: ADD r6,   r4         ; Dekrement innerer Schlaufenzaehler
+0052: ADD ip,   fl         ; Ueberlauf verarbeiten fuer Auswahl in Zeile 53/54
+0053: SET ip,   54         ;   Bei Schlaufenzaehler == 0 ende innere Schlaufe
+0054: SET ip,   45         ;   Bei Schlaufenzaehler > 0 weiter
+0055: ADD r7,   r5         ; Inkrement Quotient
+0056: SET ip,   43         ; Innere Schlaufe neu beginnen
+0057: MOV r18,  r7         ; Wert von temp. Reg. r7 zurueck kopieren in r18
+0058: MOV r3,   r11        ; Divisor ins Carry-Register kopieren
+0059: SET ip,   60         ; Unbedingter Sprung zu Zeile 60      
+0060: ADD r3,   r4         ; Kopie von Divisor dekrementieren
+0061: SET fl,   0          ; Flag loeschen
+0062: ADD r6,   r4         ; Schlaufenzaehler dekrementieren
+0063: ADD ip,   fl         ; Ueberlaufcheck
+0064: SET ip,   65         ; Unbedingter Sprung zu Zeile 65      
+0065: SET ip,   59         ; Unbedingter Sprung zu Zeile 59      
+0066: ADD r3,   r4         ; Carry-Reg. dekrementieren -> Divisionsrest
+0067: MOV r8,   r18        ; Wert von r18 in tmp. Register r8 kopieren
+0068: SET r9,   8          ; Konstante in temp. Reg. r9 laden
+                           ; Division aufrufen:
+                           ; Divisionsrest steht danach in Carry Flag (r3)
+0069: MOV r10,  r8         ; Wert von r8 in tmp. Register r10 kopieren
+0070: MOV r11,  r9         ; Wert von r9 in tmp. Register r11 kopieren
+                           ; 
+                           ; check ob Division mit 0
+0071: MOV r5,   r11        ; Register, welches auf 0 getestet werden soll
+0072: SET r4,   73         ; Aktuelle Zeilennummer in r4 fuer Ruecksprung von zero-check
+0073: SET ip,   777        ; Unbedingter Sprung zu Zeile 777 
+0074: SET r4,   1023       ; Subtraktionskonstante -1
+0075: SET r5,   1          ; Additionskonstante 1
+0076: SET r7,   0          ; Resultat Register mit 0 initialisieren
+0077: MOV r6,   r11        ; Innerer Schlaufenzaehler initialisieren (r6)
+0078: SET ip,   82         ; Unbedingter Sprung zu Zeile 82      
+0079: SET fl,   0          ; Flag loeschen
+0080: ADD r10,  r4         ; Dekrement Dividend
+0081: ADD ip,   fl         ; Bei Dividend > 0 weiter
+0082: SET ip,   89         ; Bei Dividend == 0 ende
+0083: SET fl,   0          ; Flag loeschen
+0084: ADD r6,   r4         ; Dekrement innerer Schlaufenzaehler
+0085: ADD ip,   fl         ; Ueberlauf verarbeiten fuer Auswahl in Zeile 86/87
+0086: SET ip,   87         ;   Bei Schlaufenzaehler == 0 ende innere Schlaufe
+0087: SET ip,   78         ;   Bei Schlaufenzaehler > 0 weiter
+0088: ADD r7,   r5         ; Inkrement Quotient
+0089: SET ip,   76         ; Innere Schlaufe neu beginnen
+0090: MOV r8,   r7         ; Wert von temp. Reg. r7 zurueck kopieren in r8
+0091: MOV r3,   r11        ; Divisor ins Carry-Register kopieren
+0092: SET ip,   93         ; Unbedingter Sprung zu Zeile 93      
+0093: ADD r3,   r4         ; Kopie von Divisor dekrementieren
+0094: SET fl,   0          ; Flag loeschen
+0095: ADD r6,   r4         ; Schlaufenzaehler dekrementieren
+0096: ADD ip,   fl         ; Ueberlaufcheck
+0097: SET ip,   98         ; Unbedingter Sprung zu Zeile 98      
+0098: SET ip,   92         ; Unbedingter Sprung zu Zeile 92      
+0099: ADD r3,   r4         ; Carry-Reg. dekrementieren -> Divisionsrest
+                           ; Divisionsrest in r18 kopieren
+0100: MOV r18,  r3         ; Wert von temp. Reg. r3 zurueck kopieren in r18
+                           ; --- logical operators (bitwise) --- 
+0101: MOV r9,   r18        ; Wert von r18 in tmp. Register r9 kopieren
+0102: SET r10,  0b1111111110 ; Konstante in temp. Reg. r10 laden
+0103: SET r11,  512        ; Konstante fuer Fixaddition (hoechstes Bit auf 1)
+0104: SET r5,   1          ; Konstante fuer Fixaddition (tiefstes Bit auf 1)
+0105: SET r4,   1023       ; Konstante fuer Fixaddition (maximale Ganzzahl)
+0106: SET r12,  9          ; Schlaufenzaehler (Registerbreite - 1)
+0107: ADD r6,   r6         ; Resultat nach links schieben
+0108: SET fl,   0          ; Flag zuruecksetzen
+0109: MOV r7,   r9         ; Aktuelles hoechstwertiges Bit von Op 1 ermitteln
+0110: ADD r7,   r11       
+0111: ADD fl,   fl         ; Flag mit 2 multiplizieren, optimierter bedingter
+0112: ADD ip,   fl         ; Sprung
+0113: SET r7,   0         
+0114: ADD ip,   r5        
+0115: MOV r7,   r11       
+0116: SET fl,   0         
+0117: MOV r8,   r10        ; Aktuelles hoechstw. Bit von Op 2 ermitteln
+0118: ADD r8,   r11       
+0119: ADD fl,   fl         ; s. oben
+0120: ADD ip,   fl        
+0121: SET r8,   0         
+0122: ADD ip,   r5        
+0123: MOV r8,   r11       
+0124: SET fl,   0         
+0125: ADD r7,   r8         ; Addition der ermittelten hoechstwertigen Bits
+0126: ADD r6,   fl         ; Flag enth. Resultat "AND" der obigen zwei Bits
+0127: ADD r9,   r9         ; Operand 1 nach links schieben
+0128: ADD r10,  r10        ; Operand 2 nach links schieben
+0129: SET fl,   0          ; Flag loeschen
+0130: ADD r12,  r4         ; Schlaufenzaehler dekrementieren
+0131: ADD ip,   fl         ; Bei Ueberlauf Schlaufe wiederholen:
+0132: SET ip,   133        ; Srung ans Ende (Zeile 133     )
+0133: SET ip,   106        ; Sprung zu Zeile 106     
+0134: MOV r18,  r6         ; Wert von temp. Reg. r6 zurueck kopieren in r18
+0135: MOV r13,  r18        ; Wert von r18 in tmp. Register r13 kopieren
+0136: SET r14,  0x3FF      ; Konstante in temp. Reg. r14 laden
+0137: MOV r9,   r13        ; Wert von r13 in tmp. Register r9 kopieren
+0138: SET r10,  1023       ; Konstante in temp. Reg. r10 laden
+0139: SET r11,  512        ; Konstante fuer Fixaddition (hoechstes Bit auf 1)
+0140: SET r5,   1          ; Konstante fuer Fixaddition (tiefstes Bit auf 1)
+0141: SET r4,   1023       ; Konstante fuer Fixaddition (maximale Ganzzahl)
+0142: SET r12,  9          ; Schlaufenzaehler (Registerbreite - 1)
+0143: ADD r6,   r6         ; Resultat nach links schieben
+0144: SET fl,   0          ; Flag zuruecksetzen
+0145: MOV r7,   r9         ; Aktuelles hoechstwertiges Bit von Op 1 ermitteln
+0146: ADD r7,   r11       
+0147: ADD fl,   fl         ; Flag mit 2 multiplizieren, optimierter bedingter
+0148: ADD ip,   fl         ; Sprung
+0149: SET r7,   0         
+0150: ADD ip,   r5        
+0151: MOV r7,   r11       
+0152: SET fl,   0          ; Flag zueruecksetzen
+0153: MOV r8,   r10        ; Aktuelles hoechstwertiges Bit von Op 2 ermitteln
+0154: ADD r8,   r11       
+0155: ADD fl,   fl         ; s. oben
+0156: ADD ip,   fl        
+0157: SET r8,   0         
+0158: ADD ip,   r5        
+0159: MOV r8,   r11       
+0160: ADD r7,   r8         ; Addition der zwei ermittelten hoechstw. Bits
+0161: SET fl,   0          ; Flag loeschen
+0162: ADD r7,   r11        ; Hoechstwertiges Bit nach Flag transferieren
+0163: ADD r6,   fl         ; Flag enth. Resultat "XOR" der obigen zwei Bits
+0164: ADD r9,   r9         ; Operand 1 nach links schieben
+0165: ADD r10,  r10        ; Operand 2 nach links schieben
+0166: SET fl,   0          ; Flag loeschen
+0167: ADD r12,  r4         ; Schlaufenzaehler dekrementieren
+0168: ADD ip,   fl         ; Bei Ueberlauf Schlaufe wiederholen:
+0169: SET ip,   170        ; Srung ans Ende (Zeile 170     )
+0170: SET ip,   142        ; Sprung zu Zeile 142     
+0171: MOV r13,  r6         ; Wert von temp. Reg. r6 zurueck kopieren in r13
+0172: MOV r9,   r14        ; Wert von r14 in tmp. Register r9 kopieren
+0173: SET r10,  1023       ; Konstante in temp. Reg. r10 laden
+0174: SET r11,  512        ; Konstante fuer Fixaddition (hoechstes Bit auf 1)
+0175: SET r5,   1          ; Konstante fuer Fixaddition (tiefstes Bit auf 1)
+0176: SET r4,   1023       ; Konstante fuer Fixaddition (maximale Ganzzahl)
+0177: SET r12,  9          ; Schlaufenzaehler (Registerbreite - 1)
+0178: ADD r6,   r6         ; Resultat nach links schieben
+0179: SET fl,   0          ; Flag zuruecksetzen
+0180: MOV r7,   r9         ; Aktuelles hoechstwertiges Bit von Op 1 ermitteln
+0181: ADD r7,   r11       
+0182: ADD fl,   fl         ; Flag mit 2 multiplizieren, optimierter bedingter
+0183: ADD ip,   fl         ; Sprung
+0184: SET r7,   0         
+0185: ADD ip,   r5        
+0186: MOV r7,   r11       
+0187: SET fl,   0          ; Flag zueruecksetzen
+0188: MOV r8,   r10        ; Aktuelles hoechstwertiges Bit von Op 2 ermitteln
+0189: ADD r8,   r11       
+0190: ADD fl,   fl         ; s. oben
+0191: ADD ip,   fl        
+0192: SET r8,   0         
+0193: ADD ip,   r5        
+0194: MOV r8,   r11       
+0195: ADD r7,   r8         ; Addition der zwei ermittelten hoechstw. Bits
+0196: SET fl,   0          ; Flag loeschen
+0197: ADD r7,   r11        ; Hoechstwertiges Bit nach Flag transferieren
+0198: ADD r6,   fl         ; Flag enth. Resultat "XOR" der obigen zwei Bits
+0199: ADD r9,   r9         ; Operand 1 nach links schieben
+0200: ADD r10,  r10        ; Operand 2 nach links schieben
+0201: SET fl,   0          ; Flag loeschen
+0202: ADD r12,  r4         ; Schlaufenzaehler dekrementieren
+0203: ADD ip,   fl         ; Bei Ueberlauf Schlaufe wiederholen:
+0204: SET ip,   205        ; Srung ans Ende (Zeile 205     )
+0205: SET ip,   177        ; Sprung zu Zeile 177     
+0206: MOV r14,  r6         ; Wert von temp. Reg. r6 zurueck kopieren in r14
+0207: MOV r9,   r13        ; Wert von r13 in tmp. Register r9 kopieren
+0208: MOV r10,  r14        ; Wert von r14 in tmp. Register r10 kopieren
+0209: SET r11,  512        ; Konstante fuer Fixaddition (hoechstes Bit auf 1)
+0210: SET r5,   1          ; Konstante fuer Fixaddition (tiefstes Bit auf 1)
+0211: SET r4,   1023       ; Konstante fuer Fixaddition (maximale Ganzzahl)
+0212: SET r12,  9          ; Schlaufenzaehler (Registerbreite - 1)
+0213: ADD r6,   r6         ; Resultat nach links schieben
+0214: SET fl,   0          ; Flag zuruecksetzen
+0215: MOV r7,   r9         ; Aktuelles hoechstwertiges Bit von Op 1 ermitteln
+0216: ADD r7,   r11       
+0217: ADD fl,   fl         ; Flag mit 2 multiplizieren, optimierter bedingter
+0218: ADD ip,   fl         ; Sprung
+0219: SET r7,   0         
+0220: ADD ip,   r5        
+0221: MOV r7,   r11       
+0222: SET fl,   0         
+0223: MOV r8,   r10        ; Aktuelles hoechstw. Bit von Op 2 ermitteln
+0224: ADD r8,   r11       
+0225: ADD fl,   fl         ; s. oben
+0226: ADD ip,   fl        
+0227: SET r8,   0         
+0228: ADD ip,   r5        
+0229: MOV r8,   r11       
+0230: SET fl,   0         
+0231: ADD r7,   r8         ; Addition der ermittelten hoechstwertigen Bits
+0232: ADD r6,   fl         ; Flag enth. Resultat "AND" der obigen zwei Bits
+0233: ADD r9,   r9         ; Operand 1 nach links schieben
+0234: ADD r10,  r10        ; Operand 2 nach links schieben
+0235: SET fl,   0          ; Flag loeschen
+0236: ADD r12,  r4         ; Schlaufenzaehler dekrementieren
+0237: ADD ip,   fl         ; Bei Ueberlauf Schlaufe wiederholen:
+0238: SET ip,   239        ; Srung ans Ende (Zeile 239     )
+0239: SET ip,   212        ; Sprung zu Zeile 212     
+0240: MOV r13,  r6         ; Wert von temp. Reg. r6 zurueck kopieren in r13
+0241: MOV r9,   r13        ; Wert von r13 in tmp. Register r9 kopieren
+0242: SET r10,  1023       ; Konstante in temp. Reg. r10 laden
+0243: SET r11,  512        ; Konstante fuer Fixaddition (hoechstes Bit auf 1)
+0244: SET r5,   1          ; Konstante fuer Fixaddition (tiefstes Bit auf 1)
+0245: SET r4,   1023       ; Konstante fuer Fixaddition (maximale Ganzzahl)
+0246: SET r12,  9          ; Schlaufenzaehler (Registerbreite - 1)
+0247: ADD r6,   r6         ; Resultat nach links schieben
+0248: SET fl,   0          ; Flag zuruecksetzen
+0249: MOV r7,   r9         ; Aktuelles hoechstwertiges Bit von Op 1 ermitteln
+0250: ADD r7,   r11       
+0251: ADD fl,   fl         ; Flag mit 2 multiplizieren, optimierter bedingter
+0252: ADD ip,   fl         ; Sprung
+0253: SET r7,   0         
+0254: ADD ip,   r5        
+0255: MOV r7,   r11       
+0256: SET fl,   0          ; Flag zueruecksetzen
+0257: MOV r8,   r10        ; Aktuelles hoechstwertiges Bit von Op 2 ermitteln
+0258: ADD r8,   r11       
+0259: ADD fl,   fl         ; s. oben
+0260: ADD ip,   fl        
+0261: SET r8,   0         
+0262: ADD ip,   r5        
+0263: MOV r8,   r11       
+0264: ADD r7,   r8         ; Addition der zwei ermittelten hoechstw. Bits
+0265: SET fl,   0          ; Flag loeschen
+0266: ADD r7,   r11        ; Hoechstwertiges Bit nach Flag transferieren
+0267: ADD r6,   fl         ; Flag enth. Resultat "XOR" der obigen zwei Bits
+0268: ADD r9,   r9         ; Operand 1 nach links schieben
+0269: ADD r10,  r10        ; Operand 2 nach links schieben
+0270: SET fl,   0          ; Flag loeschen
+0271: ADD r12,  r4         ; Schlaufenzaehler dekrementieren
+0272: ADD ip,   fl         ; Bei Ueberlauf Schlaufe wiederholen:
+0273: SET ip,   274        ; Srung ans Ende (Zeile 274     )
+0274: SET ip,   246        ; Sprung zu Zeile 246     
+0275: MOV r13,  r6         ; Wert von temp. Reg. r6 zurueck kopieren in r13
+0276: MOV r18,  r13        ; Wert von temp. Reg. r13 zurueck kopieren in r18
+0277: MOV r9,   r18        ; Wert von r18 in tmp. Register r9 kopieren
+0278: SET r10,  0b1010101010 ; Konstante in temp. Reg. r10 laden
+0279: SET r11,  512        ; Konstante fuer Fixaddition (hoechstes Bit auf 1)
+0280: SET r5,   1          ; Konstante fuer Fixaddition (tiefstes Bit auf 1)
+0281: SET r4,   1023       ; Konstante fuer Fixaddition (maximale Ganzzahl)
+0282: SET r12,  9          ; Schlaufenzaehler (Registerbreite - 1)
+0283: ADD r6,   r6         ; Resultat nach links schieben
+0284: SET fl,   0          ; Flag zuruecksetzen
+0285: MOV r7,   r9         ; Aktuelles hoechstwertiges Bit von Op 1 ermitteln
+0286: ADD r7,   r11       
+0287: ADD fl,   fl         ; Flag mit 2 multiplizieren, optimierter bedingter
+0288: ADD ip,   fl         ; Sprung
+0289: SET r7,   0         
+0290: ADD ip,   r5        
+0291: MOV r7,   r11       
+0292: SET fl,   0          ; Flag zueruecksetzen
+0293: MOV r8,   r10        ; Aktuelles hoechstwertiges Bit von Op 2 ermitteln
+0294: ADD r8,   r11       
+0295: ADD fl,   fl         ; s. oben
+0296: ADD ip,   fl        
+0297: SET r8,   0         
+0298: ADD ip,   r5        
+0299: MOV r8,   r11       
+0300: ADD r7,   r8         ; Addition der zwei ermittelten hoechstw. Bits
+0301: SET fl,   0          ; Flag loeschen
+0302: ADD r7,   r11        ; Hoechstwertiges Bit nach Flag transferieren
+0303: ADD r6,   fl         ; Flag enth. Resultat "XOR" der obigen zwei Bits
+0304: ADD r9,   r9         ; Operand 1 nach links schieben
+0305: ADD r10,  r10        ; Operand 2 nach links schieben
+0306: SET fl,   0          ; Flag loeschen
+0307: ADD r12,  r4         ; Schlaufenzaehler dekrementieren
+0308: ADD ip,   fl         ; Bei Ueberlauf Schlaufe wiederholen:
+0309: SET ip,   310        ; Srung ans Ende (Zeile 310     )
+0310: SET ip,   282        ; Sprung zu Zeile 282     
+0311: MOV r18,  r6         ; Wert von temp. Reg. r6 zurueck kopieren in r18
+0312: MOV r13,  r18        ; Wert von r18 in tmp. Register r13 kopieren
+0313: MOV r9,   r13        ; Wert von r13 in tmp. Register r9 kopieren
+0314: SET r10,  1023       ; Konstante in temp. Reg. r10 laden
+0315: SET r11,  512        ; Konstante fuer Fixaddition (hoechstes Bit auf 1)
+0316: SET r5,   1          ; Konstante fuer Fixaddition (tiefstes Bit auf 1)
+0317: SET r4,   1023       ; Konstante fuer Fixaddition (maximale Ganzzahl)
+0318: SET r12,  9          ; Schlaufenzaehler (Registerbreite - 1)
+0319: ADD r6,   r6         ; Resultat nach links schieben
+0320: SET fl,   0          ; Flag zuruecksetzen
+0321: MOV r7,   r9         ; Aktuelles hoechstwertiges Bit von Op 1 ermitteln
+0322: ADD r7,   r11       
+0323: ADD fl,   fl         ; Flag mit 2 multiplizieren, optimierter bedingter
+0324: ADD ip,   fl         ; Sprung
+0325: SET r7,   0         
+0326: ADD ip,   r5        
+0327: MOV r7,   r11       
+0328: SET fl,   0          ; Flag zueruecksetzen
+0329: MOV r8,   r10        ; Aktuelles hoechstwertiges Bit von Op 2 ermitteln
+0330: ADD r8,   r11       
+0331: ADD fl,   fl         ; s. oben
+0332: ADD ip,   fl        
+0333: SET r8,   0         
+0334: ADD ip,   r5        
+0335: MOV r8,   r11       
+0336: ADD r7,   r8         ; Addition der zwei ermittelten hoechstw. Bits
+0337: SET fl,   0          ; Flag loeschen
+0338: ADD r7,   r11        ; Hoechstwertiges Bit nach Flag transferieren
+0339: ADD r6,   fl         ; Flag enth. Resultat "XOR" der obigen zwei Bits
+0340: ADD r9,   r9         ; Operand 1 nach links schieben
+0341: ADD r10,  r10        ; Operand 2 nach links schieben
+0342: SET fl,   0          ; Flag loeschen
+0343: ADD r12,  r4         ; Schlaufenzaehler dekrementieren
+0344: ADD ip,   fl         ; Bei Ueberlauf Schlaufe wiederholen:
+0345: SET ip,   346        ; Srung ans Ende (Zeile 346     )
+0346: SET ip,   318        ; Sprung zu Zeile 318     
+0347: MOV r13,  r6         ; Wert von temp. Reg. r6 zurueck kopieren in r13
+0348: MOV r18,  r13        ; Wert von temp. Reg. r13 zurueck kopieren in r18
+0349: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0350: SET r11,  1          ; Konstante in temp. Reg. r11 laden
+0351: SET r3,   0          ; Carry flag Xia Seitig zuruecksetzen
+0352: SET r4,   1023       ; Subtraktionskonstante -1
+0353: MOV r5,   r11        ; Anzahl shifts (1) initialisieren
+0354: SET ip,   362        ; erstes SHL ueberspringen -> falls 0 shifts gewuenscht
+0355: SET fl,   0          ; Ueberlauf flag auf 0 setzen
+0356: ADD r10,  r10        ; shift left r10 um 1 bit
+0357: ADD ip,   r3         ; Checken ob cf bereits gesetzt
+0358: SET ip,   359        ;   cf noch nicht gesetzt: neu checken
+0359: SET ip,   362        ;   cf bereits gesetzt: weiterfahren ohne check
+0360: ADD ip,   fl         ; Checken ob shift left overflow verursachte
+0361: SET ip,   362        ;   kein overflow erfolgt -> weiterfahren
+0362: SET r3,   1          ; SHL verursachte overflow. cf setzen
+0363: SET fl,   0          ; Unterlauf flag auf 0 setzen
+0364: ADD r5,   r4         ; Schlaufenzahler dekrementieren
+0365: ADD ip,   fl         ; Checken ob Schlaufe beendet
+0366: SET ip,   367        ;   SHL verlassen
+0367: SET ip,   354        ;   SHL wiederholen
+0368: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0369: MOV r12,  r18        ; Wert von r18 in tmp. Register r12 kopieren
+0370: SET r13,  5          ; Konstante in temp. Reg. r13 laden
+0371: SET r4,   1023       ; Subtraktionskonstante -1
+0372: MOV r8,   r13        ; Anzahl shifts (5) initialisieren
+0373: SET ip,   404        ; erstes SHR ueberspringen -> falls 0 shifts gewuenscht
+                           ; shift right r12 um 1 bit
+0374: MOV r10,  r12        ; Wert von r12 in tmp. Register r10 kopieren
+0375: SET r11,  2          ; Konstante in temp. Reg. r11 laden
+                           ; 
+                           ; check ob Division mit 0
+0376: MOV r5,   r11        ; Register, welches auf 0 getestet werden soll
+0377: SET r4,   378        ; Aktuelle Zeilennummer in r4 fuer Ruecksprung von zero-check
+0378: SET ip,   777        ; Unbedingter Sprung zu Zeile 777 
+0379: SET r4,   1023       ; Subtraktionskonstante -1
+0380: SET r5,   1          ; Additionskonstante 1
+0381: SET r7,   0          ; Resultat Register mit 0 initialisieren
+0382: MOV r6,   r11        ; Innerer Schlaufenzaehler initialisieren (r6)
+0383: SET ip,   387        ; Unbedingter Sprung zu Zeile 387     
+0384: SET fl,   0          ; Flag loeschen
+0385: ADD r10,  r4         ; Dekrement Dividend
+0386: ADD ip,   fl         ; Bei Dividend > 0 weiter
+0387: SET ip,   394        ; Bei Dividend == 0 ende
+0388: SET fl,   0          ; Flag loeschen
+0389: ADD r6,   r4         ; Dekrement innerer Schlaufenzaehler
+0390: ADD ip,   fl         ; Ueberlauf verarbeiten fuer Auswahl in Zeile 391/392
+0391: SET ip,   392        ;   Bei Schlaufenzaehler == 0 ende innere Schlaufe
+0392: SET ip,   383        ;   Bei Schlaufenzaehler > 0 weiter
+0393: ADD r7,   r5         ; Inkrement Quotient
+0394: SET ip,   381        ; Innere Schlaufe neu beginnen
+0395: MOV r12,  r7         ; Wert von temp. Reg. r7 zurueck kopieren in r12
+0396: MOV r3,   r11        ; Divisor ins Carry-Register kopieren
+0397: SET ip,   398        ; Unbedingter Sprung zu Zeile 398     
+0398: ADD r3,   r4         ; Kopie von Divisor dekrementieren
+0399: SET fl,   0          ; Flag loeschen
+0400: ADD r6,   r4         ; Schlaufenzaehler dekrementieren
+0401: ADD ip,   fl         ; Ueberlaufcheck
+0402: SET ip,   403        ; Unbedingter Sprung zu Zeile 403     
+0403: SET ip,   397        ; Unbedingter Sprung zu Zeile 397     
+0404: ADD r3,   r4         ; Carry-Reg. dekrementieren -> Divisionsrest
+0405: SET fl,   0          ; Unterlauf flag auf 0 setzen
+0406: ADD r8,   r4         ; Schlaufenzahler dekrementieren
+0407: ADD ip,   fl         ; Checken ob Schlaufe beendet
+0408: SET ip,   409        ;   SHL verlassen
+0409: SET ip,   373        ;   SHL wiederholen
+0410: MOV r18,  r12        ; Wert von temp. Reg. r12 zurueck kopieren in r18
+                           ; --- jumps --- 
+0411: SET ip,   415        ; Unbedingter Sprung zu Zeile 415   
+0412: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0413: SET r10,  1         
+0414: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0415: HLT                  ; Stoppt die VM
+0416: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0417: SET r11,  10         ; Konstante in temp. Reg. r11 laden
+0418: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0419: SET fl,   0          ; Flag zuruecksetzen auf 0
+0420: ADD r10,  r5         ; Register r10 inkrementieren
+0421: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0422: SET ip,   423        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0423: SET ip,   427        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0424: ADD r11,  r5         ; Register r11 inkrementieren
+0425: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0426: SET ip,   418        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0427: SET ip,   433        ;   Abbruch: Wert in Register 10 grosser als in r18
+0428: SET fl,   0          ; Flag zuruecksetzen auf 0
+0429: ADD r11,  r5         ; Register r11 inkrementieren
+0430: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0431: SET ip,   432        ;   Abbruch: Wert in r18 ist groesser als der in 10
+0432: SET ip,   433        ;   Abbruch: Wert in 10 grosser als in r18
+0433: SET ip,   753       
+0434: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0435: SET r11,  11         ; Konstante in temp. Reg. r11 laden
+0436: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0437: SET fl,   0          ; Flag zuruecksetzen auf 0
+0438: ADD r10,  r5         ; Register r10 inkrementieren
+0439: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0440: SET ip,   441        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0441: SET ip,   445        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0442: ADD r11,  r5         ; Register r11 inkrementieren
+0443: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0444: SET ip,   436        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0445: SET ip,   451        ;   Abbruch: Wert in Register 11 grosser als in r18
+0446: SET fl,   0          ; Flag zuruecksetzen auf 0
+0447: ADD r11,  r5         ; Register r11 inkrementieren
+0448: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0449: SET ip,   450        ;   Abbruch: Wert in r18 ist groesser als der in 11
+0450: SET ip,   451        ;   Abbruch: Wert in 11 grosser als in r18
+0451: SET ip,   753       
+0452: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0453: SET r11,  9          ; Konstante in temp. Reg. r11 laden
+0454: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0455: SET fl,   0          ; Flag zuruecksetzen auf 0
+0456: ADD r10,  r5         ; Register r10 inkrementieren
+0457: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0458: SET ip,   459        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0459: SET ip,   463        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0460: ADD r11,  r5         ; Register r11 inkrementieren
+0461: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0462: SET ip,   454        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0463: SET ip,   469        ;   Abbruch: Wert in Register 9 grosser als in r18
+0464: SET fl,   0          ; Flag zuruecksetzen auf 0
+0465: ADD r11,  r5         ; Register r11 inkrementieren
+0466: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0467: SET ip,   468        ;   Abbruch: Wert in r18 ist groesser als der in 9
+0468: SET ip,   469        ;   Abbruch: Wert in 9 grosser als in r18
+0469: SET ip,   473       
+0470: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0471: SET r10,  2         
+0472: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0473: HLT                  ; Stoppt die VM
+0474: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0475: SET r11,  11         ; Konstante in temp. Reg. r11 laden
+0476: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0477: SET fl,   0          ; Flag zuruecksetzen auf 0
+0478: ADD r10,  r5         ; Register r10 inkrementieren
+0479: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0480: SET ip,   481        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0481: SET ip,   485        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0482: ADD r11,  r5         ; Register r11 inkrementieren
+0483: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0484: SET ip,   476        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0485: SET ip,   491        ;   Abbruch: Wert in Register 11 grosser als in r18
+0486: SET fl,   0          ; Flag zuruecksetzen auf 0
+0487: ADD r11,  r5         ; Register r11 inkrementieren
+0488: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0489: SET ip,   490        ;   Abbruch: Wert in r18 ist groesser als der in 11
+0490: SET ip,   490        ;   Abbruch: Wert in 11 grosser als in r18
+0491: SET ip,   757       
+0492: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0493: SET r11,  12         ; Konstante in temp. Reg. r11 laden
+0494: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0495: SET fl,   0          ; Flag zuruecksetzen auf 0
+0496: ADD r10,  r5         ; Register r10 inkrementieren
+0497: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0498: SET ip,   499        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0499: SET ip,   503        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0500: ADD r11,  r5         ; Register r11 inkrementieren
+0501: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0502: SET ip,   494        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0503: SET ip,   509        ;   Abbruch: Wert in Register 12 grosser als in r18
+0504: SET fl,   0          ; Flag zuruecksetzen auf 0
+0505: ADD r11,  r5         ; Register r11 inkrementieren
+0506: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0507: SET ip,   508        ;   Abbruch: Wert in r18 ist groesser als der in 12
+0508: SET ip,   508        ;   Abbruch: Wert in 12 grosser als in r18
+0509: SET ip,   757       
+0510: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0511: SET r11,  10         ; Konstante in temp. Reg. r11 laden
+0512: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0513: SET fl,   0          ; Flag zuruecksetzen auf 0
+0514: ADD r10,  r5         ; Register r10 inkrementieren
+0515: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0516: SET ip,   517        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0517: SET ip,   521        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0518: ADD r11,  r5         ; Register r11 inkrementieren
+0519: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0520: SET ip,   512        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0521: SET ip,   527        ;   Abbruch: Wert in Register 10 grosser als in r18
+0522: SET fl,   0          ; Flag zuruecksetzen auf 0
+0523: ADD r11,  r5         ; Register r11 inkrementieren
+0524: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0525: SET ip,   526        ;   Abbruch: Wert in r18 ist groesser als der in 10
+0526: SET ip,   526        ;   Abbruch: Wert in 10 grosser als in r18
+0527: SET ip,   531       
+0528: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0529: SET r10,  3         
+0530: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0531: HLT                  ; Stoppt die VM
+0532: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0533: SET r11,  9          ; Konstante in temp. Reg. r11 laden
+0534: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0535: SET fl,   0          ; Flag zuruecksetzen auf 0
+0536: ADD r10,  r5         ; Register r10 inkrementieren
+0537: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0538: SET ip,   539        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0539: SET ip,   543        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0540: ADD r11,  r5         ; Register r11 inkrementieren
+0541: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0542: SET ip,   534        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0543: SET ip,   549        ;   Abbruch: Wert in Register 9 grosser als in r18
+0544: SET fl,   0          ; Flag zuruecksetzen auf 0
+0545: ADD r11,  r5         ; Register r11 inkrementieren
+0546: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0547: SET ip,   549        ;   Abbruch: Wert in r18 ist groesser als der in 9
+0548: SET ip,   548        ;   Abbruch: Wert in 9 grosser als in r18
+0549: SET ip,   761       
+0550: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0551: SET r11,  11         ; Konstante in temp. Reg. r11 laden
+0552: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0553: SET fl,   0          ; Flag zuruecksetzen auf 0
+0554: ADD r10,  r5         ; Register r10 inkrementieren
+0555: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0556: SET ip,   557        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0557: SET ip,   561        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0558: ADD r11,  r5         ; Register r11 inkrementieren
+0559: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0560: SET ip,   552        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0561: SET ip,   567        ;   Abbruch: Wert in Register 11 grosser als in r18
+0562: SET fl,   0          ; Flag zuruecksetzen auf 0
+0563: ADD r11,  r5         ; Register r11 inkrementieren
+0564: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0565: SET ip,   567        ;   Abbruch: Wert in r18 ist groesser als der in 11
+0566: SET ip,   566        ;   Abbruch: Wert in 11 grosser als in r18
+0567: SET ip,   761       
+0568: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0569: SET r11,  10         ; Konstante in temp. Reg. r11 laden
+0570: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0571: SET fl,   0          ; Flag zuruecksetzen auf 0
+0572: ADD r10,  r5         ; Register r10 inkrementieren
+0573: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0574: SET ip,   575        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0575: SET ip,   579        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0576: ADD r11,  r5         ; Register r11 inkrementieren
+0577: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0578: SET ip,   570        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0579: SET ip,   585        ;   Abbruch: Wert in Register 10 grosser als in r18
+0580: SET fl,   0          ; Flag zuruecksetzen auf 0
+0581: ADD r11,  r5         ; Register r11 inkrementieren
+0582: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0583: SET ip,   585        ;   Abbruch: Wert in r18 ist groesser als der in 10
+0584: SET ip,   584        ;   Abbruch: Wert in 10 grosser als in r18
+0585: SET ip,   589       
+0586: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0587: SET r10,  4         
+0588: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0589: HLT                  ; Stoppt die VM
+0590: SET r10,  8          ; Konstante in temp. Reg. r10 laden
+0591: MOV r11,  r18        ; Wert von r18 in tmp. Register r11 kopieren
+0592: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0593: SET fl,   0          ; Flag zuruecksetzen auf 0
+0594: ADD r10,  r5         ; Register r10 inkrementieren
+0595: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0596: SET ip,   597        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0597: SET ip,   601        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0598: ADD r11,  r5         ; Register r11 inkrementieren
+0599: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0600: SET ip,   592        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0601: SET ip,   607        ;   Abbruch: Wert in Register r18 grosser als in 8
+0602: SET fl,   0          ; Flag zuruecksetzen auf 0
+0603: ADD r11,  r5         ; Register r11 inkrementieren
+0604: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0605: SET ip,   606        ;   Abbruch: Wert in 8 ist groesser als der in r18
+0606: SET ip,   606        ;   Abbruch: Wert in r18 grosser als in 8
+0607: SET ip,   765       
+0608: SET r10,  9          ; Konstante in temp. Reg. r10 laden
+0609: MOV r11,  r18        ; Wert von r18 in tmp. Register r11 kopieren
+0610: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0611: SET fl,   0          ; Flag zuruecksetzen auf 0
+0612: ADD r10,  r5         ; Register r10 inkrementieren
+0613: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0614: SET ip,   615        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0615: SET ip,   619        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0616: ADD r11,  r5         ; Register r11 inkrementieren
+0617: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0618: SET ip,   610        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0619: SET ip,   625        ;   Abbruch: Wert in Register r18 grosser als in 9
+0620: SET fl,   0          ; Flag zuruecksetzen auf 0
+0621: ADD r11,  r5         ; Register r11 inkrementieren
+0622: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0623: SET ip,   624        ;   Abbruch: Wert in 9 ist groesser als der in r18
+0624: SET ip,   624        ;   Abbruch: Wert in r18 grosser als in 9
+0625: SET ip,   765       
+0626: SET r10,  10         ; Konstante in temp. Reg. r10 laden
+0627: MOV r11,  r18        ; Wert von r18 in tmp. Register r11 kopieren
+0628: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0629: SET fl,   0          ; Flag zuruecksetzen auf 0
+0630: ADD r10,  r5         ; Register r10 inkrementieren
+0631: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0632: SET ip,   633        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0633: SET ip,   637        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0634: ADD r11,  r5         ; Register r11 inkrementieren
+0635: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0636: SET ip,   628        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0637: SET ip,   643        ;   Abbruch: Wert in Register r18 grosser als in 10
+0638: SET fl,   0          ; Flag zuruecksetzen auf 0
+0639: ADD r11,  r5         ; Register r11 inkrementieren
+0640: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0641: SET ip,   642        ;   Abbruch: Wert in 10 ist groesser als der in r18
+0642: SET ip,   642        ;   Abbruch: Wert in r18 grosser als in 10
+0643: SET ip,   647       
+0644: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0645: SET r10,  5         
+0646: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0647: HLT                  ; Stoppt die VM
+0648: SET r10,  9          ; Konstante in temp. Reg. r10 laden
+0649: MOV r11,  r18        ; Wert von r18 in tmp. Register r11 kopieren
+0650: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0651: SET fl,   0          ; Flag zuruecksetzen auf 0
+0652: ADD r10,  r5         ; Register r10 inkrementieren
+0653: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0654: SET ip,   655        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0655: SET ip,   659        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0656: ADD r11,  r5         ; Register r11 inkrementieren
+0657: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0658: SET ip,   650        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0659: SET ip,   665        ;   Abbruch: Wert in Register r18 grosser als in 9
+0660: SET fl,   0          ; Flag zuruecksetzen auf 0
+0661: ADD r11,  r5         ; Register r11 inkrementieren
+0662: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0663: SET ip,   664        ;   Abbruch: Wert in 9 ist groesser als der in r18
+0664: SET ip,   665        ;   Abbruch: Wert in r18 grosser als in 9
+0665: SET ip,   769       
+0666: SET r10,  10         ; Konstante in temp. Reg. r10 laden
+0667: MOV r11,  r18        ; Wert von r18 in tmp. Register r11 kopieren
+0668: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0669: SET fl,   0          ; Flag zuruecksetzen auf 0
+0670: ADD r10,  r5         ; Register r10 inkrementieren
+0671: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0672: SET ip,   673        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0673: SET ip,   677        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0674: ADD r11,  r5         ; Register r11 inkrementieren
+0675: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0676: SET ip,   668        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0677: SET ip,   683        ;   Abbruch: Wert in Register r18 grosser als in 10
+0678: SET fl,   0          ; Flag zuruecksetzen auf 0
+0679: ADD r11,  r5         ; Register r11 inkrementieren
+0680: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0681: SET ip,   682        ;   Abbruch: Wert in 10 ist groesser als der in r18
+0682: SET ip,   683        ;   Abbruch: Wert in r18 grosser als in 10
+0683: SET ip,   769       
+0684: SET r10,  11         ; Konstante in temp. Reg. r10 laden
+0685: MOV r11,  r18        ; Wert von r18 in tmp. Register r11 kopieren
+0686: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0687: SET fl,   0          ; Flag zuruecksetzen auf 0
+0688: ADD r10,  r5         ; Register r10 inkrementieren
+0689: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0690: SET ip,   691        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0691: SET ip,   695        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0692: ADD r11,  r5         ; Register r11 inkrementieren
+0693: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0694: SET ip,   686        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0695: SET ip,   701        ;   Abbruch: Wert in Register r18 grosser als in 11
+0696: SET fl,   0          ; Flag zuruecksetzen auf 0
+0697: ADD r11,  r5         ; Register r11 inkrementieren
+0698: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0699: SET ip,   700        ;   Abbruch: Wert in 11 ist groesser als der in r18
+0700: SET ip,   701        ;   Abbruch: Wert in r18 grosser als in 11
+0701: SET ip,   705       
+0702: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0703: SET r10,  6         
+0704: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0705: HLT                  ; Stoppt die VM
+0706: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0707: SET r11,  10         ; Konstante in temp. Reg. r11 laden
+0708: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0709: SET fl,   0          ; Flag zuruecksetzen auf 0
+0710: ADD r10,  r5         ; Register r10 inkrementieren
+0711: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0712: SET ip,   713        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0713: SET ip,   717        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0714: ADD r11,  r5         ; Register r11 inkrementieren
+0715: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0716: SET ip,   708        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0717: SET ip,   722        ;   Abbruch: Wert 10 grosser als r18
+0718: SET fl,   0          ; Flag zuruecksetzen auf 0
+0719: ADD r11,  r5         ; Register r11 inkrementieren
+0720: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0721: SET ip,   722        ;   Abbruch: Wert in r18 ist groesser als der in 10
+0722: SET ip,   723        ;   Abbruch: Wert in 10 grosser als in r18
+0723: SET ip,   773       
+0724: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0725: SET r11,  9          ; Konstante in temp. Reg. r11 laden
+0726: SET r5,   1          ; Register r5 mit Wert 1 zum inkrementieren
+0727: SET fl,   0          ; Flag zuruecksetzen auf 0
+0728: ADD r10,  r5         ; Register r10 inkrementieren
+0729: ADD ip,   fl         ; Jump zu Verzweigung ob r10 Ueberlauf oder nicht
+0730: SET ip,   731        ;   Kein Ueberlauf: weiterfahren mit r11 inkrementieren
+0731: SET ip,   735        ;   Ueberlauf: checken ob r11 auch Ueberlauf...
+0732: ADD r11,  r5         ; Register r11 inkrementieren
+0733: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0734: SET ip,   726        ;   r11 auch kein Ueberlauf: naechster Durchlauf
+0735: SET ip,   740        ;   Abbruch: Wert 9 grosser als r18
+0736: SET fl,   0          ; Flag zuruecksetzen auf 0
+0737: ADD r11,  r5         ; Register r11 inkrementieren
+0738: ADD ip,   fl         ; Jump zu Verzweigung ob r11 Ueberlauf oder nicht
+0739: SET ip,   740        ;   Abbruch: Wert in r18 ist groesser als der in 9
+0740: SET ip,   741        ;   Abbruch: Wert in 9 grosser als in r18
+0741: SET ip,   745       
+0742: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0743: SET r10,  7         
+0744: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0745: HLT                  ; Stoppt die VM
+                           ; --- Ansprungziel falls alle Tests erfolgreich --- 
+0746: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0747: SET r10,  0         
+0748: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0749: HLT                  ; Stoppt die VM
+0750: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0751: SET r10,  1         
+0752: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0753: HLT                  ; Stoppt die VM
+0754: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0755: SET r10,  2         
+0756: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0757: HLT                  ; Stoppt die VM
+0758: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0759: SET r10,  3         
+0760: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0761: HLT                  ; Stoppt die VM
+0762: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0763: SET r10,  4         
+0764: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0765: HLT                  ; Stoppt die VM
+0766: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0767: SET r10,  5         
+0768: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0769: HLT                  ; Stoppt die VM
+0770: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0771: SET r10,  6         
+0772: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0773: HLT                  ; Stoppt die VM
+0774: MOV r10,  r18        ; Wert von r18 in tmp. Register r10 kopieren
+0775: SET r10,  7         
+0776: MOV r18,  r10        ; Wert von temp. Reg. r10 zurueck kopieren in r18
+0777: HLT                  ; Stoppt die VM
+                           ; 
+                           ; Routine, die ueberprueft, ob Division 
+                           ; mit 0 vorliegt. Wert aus Register r5
+                           ; wird auf 0 geprueft. Falls dies der Fall 
+                           ; ist, dann Sprung zu Zeile 783  fuer Programmstopp 
+                           ; und ErrorFlag=1 setzen.
+0778: SET r6,   1023       ; Register r6 zum addieren von 1023 um r5
+0779: SET fl,   0          ; Ueberlauf register fl auf 0 setzen
+0780: ADD r5,   r6         ; Register r5 addieren um 1023
+0781: ADD ip,   fl         ; Checken ob Addition Ueberlauf verursachte
+0782: SET ip,   783         ; Register r5 war 0: Abbruch
+0783: MOV ip,   r4         ; Weiterfahren mit der Division
+0784: SET r2,   1          ; Error code setzen: Division mit 0
+0785: HLT                  ; Stoppt die VM

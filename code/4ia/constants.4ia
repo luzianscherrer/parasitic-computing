@@ -1,0 +1,18 @@
+;
+; $Id: constants.4ia,v 1.2 2002/11/15 11:17:57 ls Exp $
+;
+; Integer Konstanten:
+; Dieses Beispiel laedt den Wert 213 in die Register r10-r14.
+;
+;.............................................................................
+
+ARCH 8 20                  ; Architekturdefinition (8 Bits, 20 Register)
+
+00:  SET r10, 0xd5         ; Hexadezimal
+01:  SET r11, 0xD5         ; Hexadezimal
+
+02:  SET r12, 0b11010101   ; Binaer
+
+03:  SET r13, 0d213        ; Dezimal
+04:  SET r14, 213          ; Dezimal
+05:  HLT

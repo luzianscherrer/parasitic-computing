@@ -1,0 +1,71 @@
+;
+; $Id: bubblesort.xia,v 1.8 2002/12/28 18:47:48 ls Exp $
+;
+; Bubblesort.
+;
+; Sortiert eine Anzahl von r30 Ganzzahlen, beginnend bei *r31 in
+; aufsteigender Reihenfolge inplace. Im gezeigen Beispiel also die zehn 
+; Integer in r20 bis r29. 
+;
+; Die Ausfuehrung dauert im Simulationsmodus einer 8-Bit Maschine 
+; ca. 2 Sekunden. Bei einer Registerbreite von 16-Bit ist der Code
+; bei einer Dauer von ueber sieben Minuten nicht mehr sinnvoll
+; ausfuehrbar (getestet mit Linux 2.4.x, 1 Ghz Pentium III).
+;
+; Das Verhaeltnis von CPU-Zyklen der virtuellen Maschine zu CPU-Zyklen
+; der ausfuehrenden Hardware betraegt ca. 1:7000, die parasitaere
+; Ausfuehrung wuerde knapp 9 Millionen ICMP Pakete erfordern. Das 
+; Internet zaehlt gemaess dem Internet Software Consortium (www.isc.org) 
+; ca. 160 Millionen Hosts (Stand Juli 2002).
+;
+;.............................................................................
+
+              SET r20 3             ; Die zu sortierenden Zahlen werden in
+              SET r21 7             ; die Register r20 bis r29 gelegt
+              SET r22 5
+              SET r23 4
+              SET r24 0
+              SET r25 8
+              SET r26 2
+              SET r27 6
+              SET r28 9
+              SET r29 1
+
+
+              SET r30 10            ; Anzahl der zu sortierenden Elemente
+              SET r31 20            ; Zeiger auf das erste Element
+
+
+              SUB r30 1             ; Initialisierung der Schlaufenzaehler
+              MOV r34 r30
+              SET r32 0
+
+LABEL Lot                           ; Aeussere Schlaufe
+              SET r33 0
+
+LABEL Lin                           ; Innere Schlaufe
+
+              MOV r35 r31
+              ADD r35 r33           ; *r35 zeigt auf das aktuelle Element
+              MOV r36 r35
+              ADD r36 1             ; *r36 zeigt auf das naechste Element
+
+
+              JLE *r35 *r36 Lnswp   ; Elemente vergleichen, falls 
+                                    ; Reihenfolge korrekt zu Lnswp springen
+
+
+              MOV r37 *r35          ; Elemente *r35 und *36 austauschen
+              MOV *r35 *r36
+              MOV *r36 r37
+
+LABEL Lnswp
+              ADD r33 1
+              JL  r33 r34 Lin       ; Innere Schlaufe Abbruchsbedingung
+
+
+              SUB r34 1
+              ADD r32 1
+              JL  r32 r30 Lot       ; Aeussere Schlaufe Abbruchsbedingung
+
+              HLT

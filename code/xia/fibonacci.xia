@@ -1,0 +1,78 @@
+;
+; $Id: fibonacci.xia,v 1.3 2003/01/03 20:15:47 ls Exp $
+;
+; Fibonacci.
+;
+; Gibt die Fibonacci Zahlenfolge aus. Die Anzahl Zahlen kann mit r16 bestimmt
+; werden, die benutzten Register muessen mit ARCH angepasst werden. Die
+; Anzahl Register (zweites Argument der ARCH-Praeambel) errechnet sich wie 
+; folgt:
+;
+;   20 + Anzahl Zahlen + 1
+;
+; Die Ausfuehrungszeiten im Simulationsmodus bei einer Anzahl von 20 
+; Fibonacci Zahlen sind:
+;
+;  Description                           Value
+;  -----------------------------  ------------
+;  Parallel Bits per addition                2
+;  Number of registers required             40
+;  Registers-width in bits                  14
+;  Virtual machine cycles              2292780
+;  ICMP outbound-packets optimum     201752880          
+;  ICMP outbound-packets                     0
+;  ICMP inbound-packets                      0
+;  Total duration                  101.540207s
+;  User execution time              96.419998s
+;  System execution time             0.000000s
+;  CPU cycles used (approx.)       16102139904
+;
+; Zum Test diente eine Sun Ultra Sparc 1 mit einer Taktrate von 167 MHz.
+;
+; Die Ausfuehrung dieses Programmes mit obengenannter Konfiguration im 
+; parasitaeren Modus und mit einer Parallelisierungskonstante von 2 wuerde 
+; 201'752'880 ICMP Pakete benoetigen. Bei einer hypothetischen Antwortzeit 
+; von 40ms pro ICMP Paket ergaebe dies eine Ausfuehrungszeit von ungefaehr
+; 93 Tagen.
+;
+;............................................................................
+
+ARCH   14 40             ; Optional werden Anzahl benutzter Register gesetzt
+                         ; Dies, weil Pointers verwendet werden, welche
+                         ; vom Register Resolver nicht gefunden werden koennen
+                         ; zum eruieren des hoechsten benutzten Registers
+
+SPACE                      ------ Konfigurationen ------
+SET    r16   20          ; Wieviele Zahlen ausgegeben werden sollen
+SET    r17   20          ; Pointer auf die erste Fibonacci Zahl
+SET    r18   19          ; Pointer auf vorletzte Fibonacci Zahl
+
+
+SPACE                      ------ Erste Zahl 0 ist gegeben ------
+SET    *r17  1           ; Erste Zahl ist 0 gemaess Definition
+JLE    r16   1   Lend    ; Falls 0 oder 1 Zahlen ausgegeben werden sollen
+
+SPACE                      ------ Die zweite Zahl speziell berechnet ------
+SPACE                      ------ da n-2 nicht definiert             ------
+MOV    r15   *r17        ; Wert von erster Zahl temp. zwischenspeichern
+ADD    r17   1           ; Resultat Pointer inkrementieren
+MOV    *r17  r15         ; Zweite Stelle berechnen
+JEQ    r16   2   Lend    ; Falls nur 3 Zahlen (0,1,2) berechnet werden sollen
+
+ADD    r18   1           ; Zusätzlich Pointer auf n-2 intrementieren
+
+SPACE                      ------ Haupt Schlaufe ------
+LABEL  Lmain             ; Sprungzeile zum Wiederholen
+SUB    r16   1           ; Schlaufenzaehler dekrementieren.
+MOV    r15   *r18        ; n-2 in temp. Reg. r15 kopieren
+ADD    r15   *r17        ; n-2 + n-1 in r15 speichern
+ADD    r17   1           ; Pointer n-1 inkrementieren
+ADD    r18   1           ; Pointer n-2 inkrementieren
+MOV    *r17  r15         ; Neuer Wert speichern
+JG     r16   2   Lmain   ; Schlaufe wiederholen
+                         ; Vergleich mit 2, da bereits zwei Zahlen berechnet
+                         ; wurden bevor die Lmain Schlaufe erreicht...
+
+LABEL  Lend              ; Programm stoppen
+HLT
+

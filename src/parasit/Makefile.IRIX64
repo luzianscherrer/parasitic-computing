@@ -1,0 +1,44 @@
+#
+#   Parasitic Computing
+#   $Id: Makefile.IRIX64,v 1.2 2002/12/01 18:27:29 ls Exp $
+#
+#   Makefile to build the whole project.
+#
+#.............................................................................
+
+CC=cc
+CFLAGS=-fullwarn -O2
+
+all: pshell
+
+pshell: debug.o icmpcalc.o pshell.o parser.o vm.o hostlist.o lex.yy.o
+	$(CC) debug.o icmpcalc.o pshell.o parser.o vm.o hostlist.o lex.yy.o -o pshell -L/usr/freeware/lib32 -lreadline -lncurses -lfl
+
+clean:
+	rm -f *.o
+	rm -f lex.yy.c
+	rm -f pshell
+
+lex.yy.c: scanner.l
+	flex scanner.l
+
+lex.yy.o: lex.yy.c
+	$(CC) -diag_suppress 1552 -c lex.yy.c
+
+debug.o: debug.c debug.h globals.h
+	$(CC) $(CFLAGS) -c debug.c
+
+icmpcalc.o: icmpcalc.c globals.h icmpcalc.h hostlist.h vm.h
+	$(CC) $(CFLAGS) -c icmpcalc.c
+
+hostlist.o: hostlist.c hostlist.h debug.h
+	$(CC) $(CFLAGS) -c hostlist.c
+
+pshell.o: pshell.c globals.h parser.h vm.h pshell.h icmpcalc.h hostlist.h
+	$(CC) $(CFLAGS) -c pshell.c -I/usr/freeware/include -I/usr/freeware/include/readline
+
+parser.o: parser.c globals.h parser.h debug.h vm.h
+	$(CC) $(CFLAGS) -c parser.c
+
+vm.o: vm.c globals.h vm.h icmpcalc.h
+	$(CC) $(CFLAGS) -c vm.c

@@ -1,0 +1,23 @@
+;
+; $Id: runtime_error2.4ia,v 1.2 2002/11/15 11:17:58 ls Exp $
+;
+; Laufzeitfehler Beispiel:
+; In Zeile 2 wird versucht, durch indirekte Adressierung das Register
+; 255 anzusprechen. Falls dieses nicht existiert resultiert ein 
+; Laufzeitfehler. Damit das Beispiel seine Wirkung erziehlt, muss die
+; virtuelle Maschine mit einer Anzahl < 255 an Registern konfiguriert 
+; sein (s. ARCH Definition).
+;
+; Hinweis: dieser Laufzeitfehler kann nur dann auftreten, wenn die 
+; definierte Registerbreite ueberhaupt den Zugriff auf nichtexistente 
+; Register ermoeglicht, d.h. die Anzahl Register kleiner als der 
+; hoechstmoeglich in einem Register speicherbare Integer ist.
+;
+;.............................................................................
+
+ARCH 8 10         ; Architekturdefinition (8 Bits, 10 Register)
+
+0:  SET r2, 255   ; r2 mit 255 initialisieren
+1:  SET r3, 9     ; r3 mit 9 initialisieren
+2:  MOV *r2, r3   ; 9 zum Instruktionszeiger addieren
+3:  HLT

@@ -1,0 +1,39 @@
+;
+; $Id: division.4ia,v 1.4 2002/11/15 11:17:57 ls Exp $
+;
+; Ganzzahldivision mit Dividend in r10, Divisor in r11, Resultat in r7 und
+; Divisonsrest in r8 (oder in Registern ausgedrueckt: r10/r11 = r7 Rest r8). 
+; Ein Divisor von 0 ist nicht zulaessig und wuerde in einer Endlosschlaufe 
+; resultieren.
+;
+;.............................................................................
+
+ARCH 8 12          ; Architekturdefinition (8 Bits, 12 Register)
+
+00:  SET r10, 110  ; Dividend
+01:  SET r11, 12   ; Divisor (darf nicht 0 sein!)
+02:  SET r4, 0xFF  ; Subtraktionskonstante
+03:  SET r5, 1     ; Additionskonstante
+04:  MOV r6, r11   ; Innerer Schlaufenzaehler initialisieren (r6)
+05:  SET ip, 9     ; An ende der inneren Schlaufe springen
+06:  SET fl, 0     ; Flag loeschen
+07:  ADD r10, r4   ; Dekrement Dividend
+08:  ADD ip, fl    ; Bei Dividend > 0 weiter
+09:  SET ip, 16    ; Bei Dividend == 0 ende
+10:  SET fl, 0     ; Flag loeschen
+11:  ADD r6, r4    ; Dekrement innerer Schlaufenzaehler
+12:  ADD ip, fl    ; Ueberlauf verarbeiten fuer Auswahl in Zeile 13/14
+13:  SET ip, 14    ; Bei Schlaufenzaehler == 0 ende innere Schlaufe
+14:  SET ip, 5     ; Bei Schlaufenzaehler > 0 weiter
+15:  ADD r7, r5    ; Inkrement Quotient 
+16:  SET ip, 3     ; Innere Schlaufe neu beginnen
+17:  MOV r8, r11   ; Divisor nach r8 kopieren
+18:  SET ip, 19    ; An start von Rest-Subtraktionsloop springen
+19:  ADD r8, r4    ; Kopie von Divisor dekrementieren
+20:  SET fl, 0     ; Flag loeschen
+21:  ADD r6, r4    ; Schlaufenzaehler dekrementieren
+22:  ADD ip, fl    ; Ueberlaufcheck
+23:  SET ip, 24    ; Schlaufe beenden
+24:  SET ip, 18    ; Schlaufe wiederholen
+25:  ADD r8, r4    ; r8 dekrementieren -> Divisonsrest
+26:  HLT
