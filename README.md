@@ -22,6 +22,7 @@
 
 This README only serves as a quick getting started guide. Everything 
 else is explained in detail in the documents in the docs folder. 
+The technical main concept is described in [Realisierungskonzept.pdf](docs/Realisierungskonzept.pdf).
 The very impatient can just run `make install`.
 
 ## Structure
