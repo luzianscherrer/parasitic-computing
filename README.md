@@ -1,6 +1,8 @@
 # Parasitic Computing
 
-Diploma Thesis - University of Applied Sciences, Bern, Switzerland. Copyright (c) 2002 Juerg Reusser & Luzian Scherrer.
+*Diploma Thesis - University of Applied Sciences, Bern, Switzerland. Copyright (c) 2002 Juerg Reusser & Luzian Scherrer.*
+
+The term **Parasitic Computing** was first introduced in August 2001, when scientists at the [Notre Dame University, Indiana (USA)](https://www.nd.edu) found a way to solve mathematical problems using external computational power without knowledge or permission of their respective owners. This Diploma Thesis of the [University of Applied Sciences in Bern (Switzerland)](https://www.bfh.ch/) does extend that concept into a fully programmable virtual machine that is capable of solving any known problem in classic computer science. 
 
 ## Preface
 
