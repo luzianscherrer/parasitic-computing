@@ -1,22 +1,6 @@
+# Parasitic Computing
 
-                ______                          __ __   __       
-               |   __ \.---.-.----.---.-.-----.|__|  |_|__|.----.
-               |    __/|  _  |   _|  _  |__ --||  |   _|  ||  __|
-               |___|   |___._|__| |___._|_____||__|____|__||____|
-            ______                              __   __              
-           |      |.-----.--------.-----.--.--.|  |_|__|.-----.-----.
-           |   ---||  _  |        |  _  |  |  ||   _|  ||     |  _  |
-           |______||_____|__|__|__|   __|_____||____|__||__|__|___  |
-                                  |__|                        |_____|
-
-            Diploma Thesis - University of Applied Sciences, Bern CH
-               Copyright (c) 2002 Juerg Reusser & Luzian Scherrer
-
-                 $Id: README,v 1.7 2003/01/02 17:40:32 ls Exp $
-
-
-
-
+Diploma Thesis - University of Applied Sciences, Bern, Switzerland. Copyright (c) 2002 Juerg Reusser & Luzian Scherrer.
 
 ## Preface
 
